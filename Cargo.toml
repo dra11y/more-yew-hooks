@@ -6,6 +6,7 @@ authors = ["Tom Grushka <tom@dra11y.com>"]
 description = "Additional hooks for the [`yew`](https://yew.rs) ecosystem, including bugfixes for [`yew-hooks`][yew-hooks]."
 homepage = "https://github.com/dra11y/more-yew-hooks"
 repository = "https://github.com/dra11y/more-yew-hooks"
+license = "MIT"
 
 [features]
 default = ["storage"]
