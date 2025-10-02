@@ -1,0 +1,24 @@
+[package]
+name = "more-yew-hooks"
+version = "0.1.0"
+edition = "2024"
+authors = ["Tom Grushka <tom@dra11y.com>"]
+description = "Additional hooks for the [`yew`](https://yew.rs) ecosystem, including bugfixes for [`yew-hooks`][yew-hooks]."
+homepage = "https://github.com/dra11y/more-yew-hooks"
+repository = "https://github.com/dra11y/more-yew-hooks"
+
+[features]
+default = ["storage"]
+storage = ["dep:serde", "serde_json"]
+
+[dependencies]
+gloo = { version = "0.11", features = ["timers"] }
+log = "0.4"
+serde = { optional = true, version = "1", features = ["derive"] }
+serde_json = { optional = true, version = "1" }
+web-sys = { version = "0.3", features = ["StorageEvent"] }
+yew = "0.21"
+yew-hooks = "0.3"
+
+[workspace.metadata.dylint]
+libraries = [{ git = "https://github.com/dra11y/toms-lints" }]
