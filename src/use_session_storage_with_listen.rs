@@ -9,12 +9,12 @@ use yew::prelude::*;
 use yew_hooks::use_event_with_window;
 
 /// State handle for the [`use_session_storage_with_listen`] hook.
-pub struct UseSessionStorageWithListenerHandle<T> {
+pub struct UseSessionStorageWithListenHandle<T> {
     inner: UseStateHandle<Option<T>>,
     key: Rc<String>,
 }
 
-impl<T> UseSessionStorageWithListenerHandle<T> {
+impl<T> UseSessionStorageWithListenHandle<T> {
     /// Set a `value` for the specified key.
     pub fn set(&self, value: T)
     where
@@ -32,7 +32,7 @@ impl<T> UseSessionStorageWithListenerHandle<T> {
     }
 }
 
-impl<T> Deref for UseSessionStorageWithListenerHandle<T> {
+impl<T> Deref for UseSessionStorageWithListenHandle<T> {
     type Target = Option<T>;
 
     fn deref(&self) -> &Self::Target {
@@ -40,7 +40,7 @@ impl<T> Deref for UseSessionStorageWithListenerHandle<T> {
     }
 }
 
-impl<T> Clone for UseSessionStorageWithListenerHandle<T> {
+impl<T> Clone for UseSessionStorageWithListenHandle<T> {
     fn clone(&self) -> Self {
         Self {
             inner: self.inner.clone(),
@@ -49,7 +49,7 @@ impl<T> Clone for UseSessionStorageWithListenerHandle<T> {
     }
 }
 
-impl<T> PartialEq for UseSessionStorageWithListenerHandle<T>
+impl<T> PartialEq for UseSessionStorageWithListenHandle<T>
 where
     T: PartialEq,
 {
@@ -101,7 +101,7 @@ where
 /// }
 /// ```
 #[hook]
-pub fn use_session_storage_with_listen<T>(key: String) -> UseSessionStorageWithListenerHandle<T>
+pub fn use_session_storage_with_listen<T>(key: String) -> UseSessionStorageWithListenHandle<T>
 where
     T: for<'de> Deserialize<'de> + 'static,
 {
@@ -127,5 +127,5 @@ where
         });
     }
 
-    UseSessionStorageWithListenerHandle { inner, key }
+    UseSessionStorageWithListenHandle { inner, key }
 }

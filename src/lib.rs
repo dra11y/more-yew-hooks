@@ -12,5 +12,5 @@ mod use_online;
 pub use use_online::use_online;
 mod use_session_storage_with_listen;
 pub use use_session_storage_with_listen::{
-    UseSessionStorageWithListenerHandle, use_session_storage_with_listen,
+    UseSessionStorageWithListenHandle, use_session_storage_with_listen,
 };
