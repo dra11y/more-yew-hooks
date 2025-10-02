@@ -218,7 +218,7 @@ Consider writing integration tests in a harness crate with `wasm-bindgen-test` (
 
 ## License
 
-MIT (see `LICENSE` — if missing, this section should be updated once a license is added).
+MIT
 
 ## Acknowledgements
 
