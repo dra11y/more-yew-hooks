@@ -9,19 +9,16 @@ Additional hooks for the [`yew`](https://yew.rs) ecosystem, including bugfixes f
 
 ## Motivation
 
-I created this crate because there were (still are?) bugs/gaps in some common [`yew-hooks`][yew-hooks] hooks, such as `use_debounce` (did not work at all),  `use_session_storage` (lacked a = listener like `use_local_storage`), and `use_local_storage_with_default` (to get `T::default()` if the key does not exist without having to unwrap on every use).
+I created this crate to augment some of the hooks in the `yew_hooks`, such as `use_online` and `use_btree_set`.
 
-I've also added a couple additional hooks that may be useful such as `use_online` and `use_btree_set`.
-
-## `yew-hooks` Bugfixes
-
-Differences relative to existing `yew-hooks` utilities:
-
-- `use_debounce` / `use_debounce_state`: accept `Fn()` instead of `FnOnce()` so the same handle can be triggered multiple times.
 - `use_local_storage_default`: returns `T::default()` on absence or deserialization failure and listens to `storage` events.
 - `use_session_storage_with_listen`: listens for `storage` events and filters by `sessionStorage` in case keys conflict with `localStorage`.
 - `use_btree_set`: ordered set state with operations (`insert`, `replace`, `retain`, etc.).
 - `use_online`: minimal wrapper around `navigator.onLine` with event listeners.
+
+## Note: Breaking Change
+
+I was wrong about `use_debounce` and `use_debounce_state` in yew-hooks. They do accept `FnOnce()` and this is correct (least restrictive). De-confusion: `FnOnce()` can be called **at least once**, **NOT** at MOST once. The bug I experienced was likely somewhere else in my project. Thus they have been removed from this crate.
 
 ## Installation
 
@@ -96,47 +93,6 @@ fn use_btree_set<T: 'static + Eq + Ord + Hash>(initial: BTreeSet<T>) -> UseBTree
 **Edge cases**:
 - Panics if you call `current()` while holding an outstanding mutable borrow (rare in normal hook usage).
 - Equality for the handle is based on inner set content, not pointer identity.
-
----
-### `use_debounce`
-Run a callback only after no further invocations occur within a wait window (`millis`). Uses `Fn()` (not `FnOnce()`).
-
-**Signature**:
-```rust
-fn use_debounce<F: Fn() + 'static>(callback: F, millis: u32) -> UseDebounceHandle
-```
-**Handle methods**:
-- `run()` — schedule (and reset) the debounce timer
-- `cancel()` — cancel any pending invocation
-
-**Behavior**:
-- Multiple rapid `run()` calls coalesce into a single future callback.
-- Cleaned up automatically on component unmount.
-
-**Pitfalls**:
-- Long callbacks still run on the main thread; if work is heavy, offload to a web worker or chunk with `gloo::timers::future::TimeoutFuture`.
-
----
-### `use_debounce_state`
-Debounced state updates. Only the latest value set within the debounce window is committed to component state.
-
-**Signature**:
-```rust
-fn use_debounce_state<T: 'static, F: Fn() -> T>(init: F, millis: u32) -> UseDebounceStateHandle<T>
-```
-**Handle**:
-- Derefs to `T`
-- `set(T)` — stage a new value (not immediately applied)
-
-**Workflow**:
-1. Call `set(new_value)` freely while the user types or drags.
-2. After `millis` of inactivity, state updates once.
-
-**Common use cases**: Search boxes, autosave, form validation throttling.
-
-**Notes**:
-- Equality comparisons rely on the underlying `UseStateHandle<T>` semantics.
-- Any staged value replaced before timeout fires is dropped.
 
 ---
 ### `use_local_storage_default` (feature = `storage`)
